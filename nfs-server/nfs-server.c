@@ -48,7 +48,7 @@
 
 	     fprintf(stderr,"\n NFS-Server Started.\n");
 
-	     int pid; int con_accpt_sucess;
+	     int pid; //int con_accpt_sucess;
 	     while (true)   // for never-ending loop
 	     {
 	         newsockfd = accept(sockfd,(struct sockaddr *) &cli_addr, &clilen);  // creating new socket
@@ -59,8 +59,8 @@
 	         	exit(0);
 	         }
 
-	         con_accpt_sucess = 1 ;
-	         /*
+	       //  con_accpt_sucess = 1 ;
+	         
 	         pid = fork(); // generating new process id for incoming requests
 
 	         if (pid < 0)
@@ -78,7 +78,7 @@
 	         else 
 	         { 
 				close(newsockfd); //closing socket
-			 }	*/
+			 }	
 
 	     } 		// while ends
 
