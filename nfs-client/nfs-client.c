@@ -68,7 +68,7 @@
  static int nfs_getattr(const char *path, struct stat *stbuf)
  {
  	int res = 0 ;
- 	fprintf(stderr," \n ******** nfs_getattr %s ******* \n", path);
+ 	//fprintf(stderr," \n ******** nfs_getattr %s ******* \n", path);
 
 
 	if(build_connection() < 0) // reneweing socket connection
@@ -86,7 +86,7 @@
 
 	string test;
 	nfs_obj.SerializeToString(&test);
-        res = write(sockfd,test.c_str(),test.length()); 	// res = lstat(path, stbuf); original_system_call
+        res = send(sockfd,test.c_str(),test.length(),0); 	// res = lstat(path, stbuf); original_system_call
         if(res < 0)
         {
         	perror("\n\tError, couldn't write onto socket.\n\n \t exiting nfs-mount-operation.");
@@ -96,17 +96,17 @@
 
         nfs::nfsBool nfsBool_obj;
         char buffer[BUFSIZ];
-        res = read(sockfd,buffer,BUFSIZ);
+        res = recv(sockfd,buffer,BUFSIZ,0);
         if (res < 0) 
         {
-        	fprintf(stderr,"ERROR, while reading data from socket. \n");
+        	//fprintf(stderr,"ERROR, while reading data from socket. \n");
         }
 
 	nfsBool_obj.ParseFromString(buffer);	// here all client-server communication completes.
 	res = nfsBool_obj.result();
 	if (nfsBool_obj.result() < 0) 
 	{
-		fprintf(stderr,"ERROR, nfs_getattr response from server: %d \n", nfsBool_obj.result());
+		//fprintf(stderr,"ERROR, nfs_getattr response from server: %d \n", nfsBool_obj.result());
 		close(sockfd);
 		return nfsBool_obj.result();
 	}
@@ -125,14 +125,14 @@
 	stbuf->st_ctime = nfsBool_obj.nfs_stat().ctime();
 	stbuf->st_atime = nfsBool_obj.nfs_stat().atime();
 
-	fprintf(stderr," \n ******** ending nfs_getattr %s ******* \n", path); 
+	//fprintf(stderr," \n ******** ending nfs_getattr %s ******* \n", path); 
 	close(sockfd);
 	return nfsBool_obj.result();
 }
 
 static int nfs_access(const char *path, int mask)
 {
-	fprintf(stderr," \n ******** nfs_access %s persmissions :::: %d \n", path,mask);
+	//fprintf(stderr," \n ******** nfs_access %s persmissions :::: %d \n", path,mask);
 	int res;
 
 	// reneweing socket connection
@@ -163,33 +163,33 @@ static int nfs_access(const char *path, int mask)
 	
 	string test;
 	nfs_obj.SerializeToString(&test);
-        res = write(sockfd,test.c_str(),test.length()); 	// res = access(path, mask); original_system_call
+        res = send(sockfd,test.c_str(),test.length(),0); 	// res = access(path, mask); original_system_call
 
 	/* SERVER RESPONSE AGAINST CLIENT REQUEST */	
         nfs::nfsBool nfsBool_obj;
         char buffer[BUFSIZ];
-        res = read(sockfd,buffer,BUFSIZ);
+        res = recv(sockfd,buffer,BUFSIZ,0);
         if (res < 0) 
         {
-        	fprintf(stderr,"ERROR, while reading data from socket. \n");
+        	//fprintf(stderr,"ERROR, while reading data from socket. \n");
         }
 
 	nfsBool_obj.ParseFromString(buffer);	// here all client-server communication completes.
 
 	if (nfsBool_obj.result() < 0) 
 	{
-		fprintf(stderr,"ERROR, nfs_access response from server. %d \n", nfsBool_obj.result());
+		//fprintf(stderr,"ERROR, nfs_access response from server. %d \n", nfsBool_obj.result());
 		close(sockfd);		
 		return nfsBool_obj.result();
 	}
-	fprintf(stderr," \n ******** ending nfs_access %s ******* \n", path);
+	//fprintf(stderr," \n ******** ending nfs_access %s ******* \n", path);
 	close(sockfd);
 	return nfsBool_obj.result();
 }
 
 static int nfs_readlink(const char *path, char *buf, size_t size)
 {
-	fprintf(stderr," \n ******** nfs_readlink ******* \n");
+	//fprintf(stderr," \n ******** nfs_readlink ******* \n");
 	int res;
 	// cliend filling all relevant information using object_based_message;	
 		if(build_connection() < 0)
@@ -207,7 +207,7 @@ static int nfs_readlink(const char *path, char *buf, size_t size)
 
 		string test;
 		nfs_obj.SerializeToString(&test);
-        res = write(sockfd,test.c_str(),test.length());  	  // original_system_call
+        res = send(sockfd,test.c_str(),test.length(),0);  	  // original_system_call
         if (res < 0) 
         {
         	perror("\n\tError, couldn't write onto socket.\n\n \t exiting nfs-mount-operation.");
@@ -217,10 +217,10 @@ static int nfs_readlink(const char *path, char *buf, size_t size)
 	// client will look for server reply against the sent request. both will use the same message protocol(object_based messaging)
         nfs::nfsBool nfsBool_obj;
         char buffer[BUFSIZ];
-		int n = read(sockfd,buffer,BUFSIZ);    // here all client-server communication completes.
+		int n = recv(sockfd,buffer,BUFSIZ,0);    // here all client-server communication completes.
 		if (n < 0) 
 		{
-			fprintf(stderr,"ERROR, while reading data from socket. \n");
+			//fprintf(stderr,"ERROR, while reading data from socket. \n");
 		}
 
 		nfsBool_obj.ParseFromString(buffer);
@@ -228,16 +228,16 @@ static int nfs_readlink(const char *path, char *buf, size_t size)
 
 		if (nfsBool_obj.result() < 0)
 		{
-			fprintf(stderr,"ERROR, nfs_readlink response from server. %d \n", nfsBool_obj.result());
+			//fprintf(stderr,"ERROR, nfs_readlink response from server. %d \n", nfsBool_obj.result());
 			close(sockfd);
 			return nfsBool_obj.result();
 		}
 
-		fprintf(stderr,"\n\tvalue from server buf %s\n",nfsBool_obj.buffer_space().c_str());
-		fprintf(stderr,"\n\tvalue of buf %s\n",buf);
+		//fprintf(stderr,"\n\tvalue from server buf %s\n",nfsBool_obj.buffer_space().c_str());
+		//fprintf(stderr,"\n\tvalue of buf %s\n",buf);
 
 
-		fprintf(stderr," \n\t ******** ending nfs_readlink ******* \n");
+		//fprintf(stderr," \n\t ******** ending nfs_readlink ******* \n");
 		close(sockfd);
 		return nfsBool_obj.result();
 }
@@ -247,7 +247,7 @@ static int nfs_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
 	off_t offset, struct fuse_file_info *fi,
 	enum fuse_readdir_flags flags)
 {
-	fprintf(stderr," \n ******** nfs_readdir ******* \n");
+	//fprintf(stderr," \n ******** nfs_readdir ******* \n");
 	
 	// reneweing socket connection
 	if(build_connection() < 0)
@@ -267,7 +267,7 @@ static int nfs_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
 
 	string test;
 	nfs_obj.SerializeToString(&test);
-        int res = write(sockfd,test.c_str(),test.length()); 	// res = lstat(path, stbuf); original_system_call
+        int res = send(sockfd,test.c_str(),test.length(),0); 	// res = lstat(path, stbuf); original_system_call
         if(res < 0)
         {
         	perror("\n\tError, couldn't write onto socket.\n\n \t exiting nfs-mount-operation.");
@@ -277,16 +277,16 @@ static int nfs_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
 
         nfs::nfsDirList nfsDirlist_obj;
         char buffer[BUFSIZ];
-        res = read(sockfd,buffer,BUFSIZ);
+        res = recv(sockfd,buffer,BUFSIZ,0);
         if (res < 0) 
         {
-        	fprintf(stderr,"ERROR, while reading data from socket. \n");
+        	//fprintf(stderr,"ERROR, while reading data from socket. \n");
         }
 
 	nfsDirlist_obj.ParseFromString(buffer);		// here all client-server communication completes.
 	if (nfsDirlist_obj.nfs_dir_result() < 0) 
 	{
-		fprintf(stderr,"ERROR, nfs_getattr response from server: %d \n", nfsDirlist_obj.nfs_dir_result());
+		//fprintf(stderr,"ERROR, nfs_getattr response from server: %d \n", nfsDirlist_obj.nfs_dir_result());
 		close(sockfd);
 		return nfsDirlist_obj.nfs_dir_result();
 	}
@@ -301,13 +301,13 @@ static int nfs_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
 		count++;
 	}
 
-	fprintf(stderr," \n ******** ending nfs_readdir %s ******* \n", path);
+	//fprintf(stderr," \n ******** ending nfs_readdir %s ******* \n", path);
 	return nfsDirlist_obj.nfs_dir_result();
 }
 
 static int nfs_mknod(const char *path, mode_t mode, dev_t rdev)
 {
-	fprintf(stderr," \n ******** nfs_mknod ******* \n");
+	//fprintf(stderr," \n ******** nfs_mknod ******* \n");
 	int res;
 	
 	// reneweing socket connection
@@ -355,27 +355,27 @@ static int nfs_mknod(const char *path, mode_t mode, dev_t rdev)
 
 	string test;
 	nfs_obj.SerializeToString(&test); 
-	res = write(sockfd,test.c_str(),test.length()); 	// original_system_call
+	res = send(sockfd,test.c_str(),test.length(),0); 	// original_system_call
 
 	/* SERVER RESPONSE AGAINST CLIENT REQUEST */	
         nfs::nfsBool nfsBool_obj;
         char buffer[BUFSIZ];
-        res = read(sockfd,buffer,BUFSIZ);
+        res = recv(sockfd,buffer,BUFSIZ,0);
         if (res < 0) 
         {
-        	fprintf(stderr,"ERROR, while reading data from socket. \n");
+        	//fprintf(stderr,"ERROR, while reading data from socket. \n");
         }
 
 	nfsBool_obj.ParseFromString(buffer);	// here all client-server communication completes.
 
 	if (nfsBool_obj.result() < 0) 
 	{
-		fprintf(stderr,"ERROR, nfs_mknode response from server. %d \n", nfsBool_obj.result());
+		//fprintf(stderr,"ERROR, nfs_mknode response from server. %d \n", nfsBool_obj.result());
 		close(sockfd);		
 		return nfsBool_obj.result();
 	}
 
-	fprintf(stderr," \n ******** ending nfs_mknode %s ******* \n", path);
+	//fprintf(stderr," \n ******** ending nfs_mknode %s ******* \n", path);
 	close(sockfd);
 	return nfsBool_obj.result();
 
@@ -383,7 +383,7 @@ static int nfs_mknod(const char *path, mode_t mode, dev_t rdev)
 
 	static int nfs_mkdir(const char *path, mode_t mode)
 	{
-		fprintf(stderr," \n\t ******** nfs_mkdir path: %s ******* \n",path);
+		//fprintf(stderr," \n\t ******** nfs_mkdir path: %s ******* \n",path);
 		int res;
 
 	// cliend filling all relevant information using object_based_message;	
@@ -402,7 +402,7 @@ static int nfs_mknod(const char *path, mode_t mode, dev_t rdev)
 
 		string test;
 		nfs_obj.SerializeToString(&test);
-        res = write(sockfd,test.c_str(),test.length());  	//res = mkdir(path, mode);  // original_system_call
+        res = send(sockfd,test.c_str(),test.length(),0);  	//res = mkdir(path, mode);  // original_system_call
         if (res < 0) 
         {
         	perror("\n\tError, couldn't write onto socket.\n\n \t exiting nfs-mount-operation.");
@@ -414,28 +414,28 @@ static int nfs_mknod(const char *path, mode_t mode, dev_t rdev)
 
         nfs::nfsBool nfsBool_obj;
         char buffer[BUFSIZ];
-	int n = read(sockfd,buffer,BUFSIZ);    // here all client-server communication completes.
+	int n = recv(sockfd,buffer,BUFSIZ,0);    // here all client-server communication completes.
 	if (n < 0) 
 	{
-		fprintf(stderr,"ERROR, while reading data from socket. \n");
+		//fprintf(stderr,"ERROR, while reading data from socket. \n");
 	}
 
 	nfsBool_obj.ParseFromString(buffer);	 	
 	if (nfsBool_obj.result() < 0)
 	{
-		fprintf(stderr,"ERROR, nfs_mkdir response from server. %d \n", nfsBool_obj.result());
+		//fprintf(stderr,"ERROR, nfs_mkdir response from server. %d \n", nfsBool_obj.result());
 		close(sockfd);
 		return nfsBool_obj.result();
 	}
 
-	fprintf(stderr," \n\t ******** ending nfs_mkdir ******* \n");
+	//fprintf(stderr," \n\t ******** ending nfs_mkdir ******* \n");
 	close(sockfd);
 	return nfsBool_obj.result();
 }
 
 static int nfs_unlink(const char *path)
 {
-	fprintf(stderr," \n ******** nfs_unlink ******* \n");
+	//fprintf(stderr," \n ******** nfs_unlink ******* \n");
 	int res;
 	// cliend filling all relevant information using object_based_message;	
 	if(build_connection() < 0)
@@ -452,7 +452,7 @@ static int nfs_unlink(const char *path)
 
 	string test;
 	nfs_obj.SerializeToString(&test);
-        res = write(sockfd,test.c_str(),test.length());  //res = rmdir(path);
+        res = send(sockfd,test.c_str(),test.length(),0);  //res = rmdir(path);
         if (res < 0) 
         {
         	perror("\n\tError, couldn't write onto socket.\n\n \t exiting nfs-mount-operation.");
@@ -463,28 +463,28 @@ static int nfs_unlink(const char *path)
 	// client will look for server reply against the sent request. both will use the same message protocol(object_based messaging)
         nfs::nfsBool nfsBool_obj;
         char buffer[BUFSIZ];
-	int n = read(sockfd,buffer,BUFSIZ);    // here all client-server communication completes.
+	int n = recv(sockfd,buffer,BUFSIZ,0);    // here all client-server communication completes.
 	if (n < 0) 
 	{
-		fprintf(stderr,"ERROR, while reading data from socket. \n");
+		//fprintf(stderr,"ERROR, while reading data from socket. \n");
 	}
 
 	nfsBool_obj.ParseFromString(buffer);	 	
 	if (nfsBool_obj.result() < 0)
 	{
-		fprintf(stderr,"ERROR, nfs_rmdir response from server. %d \n", nfsBool_obj.result());
+		//fprintf(stderr,"ERROR, nfs_rmdir response from server. %d \n", nfsBool_obj.result());
 		close(sockfd);
 		return nfsBool_obj.result();
 	}
 
-	fprintf(stderr," \n\t ******** ending nfs_rmdir ******* \n");
+	//fprintf(stderr," \n\t ******** ending nfs_rmdir ******* \n");
 	close(sockfd);
 	return nfsBool_obj.result();
 }
 
 static int nfs_rmdir(const char *path)
 {
-	fprintf(stderr," \n ******** nfs_rmdir ******* \n");
+	//fprintf(stderr," \n ******** nfs_rmdir ******* \n");
 	int res;
 
 	// cliend filling all relevant information using object_based_message;	
@@ -502,7 +502,7 @@ static int nfs_rmdir(const char *path)
 
 	string test;
 	nfs_obj.SerializeToString(&test);
-        res = write(sockfd,test.c_str(),test.length());  //res = rmdir(path);
+        res = send(sockfd,test.c_str(),test.length(),0);  //res = rmdir(path);
         if (res < 0) 
         {
         	perror("\n\tError, couldn't write onto socket.\n\n \t exiting nfs-mount-operation.");
@@ -513,28 +513,28 @@ static int nfs_rmdir(const char *path)
 	// client will look for server reply against the sent request. both will use the same message protocol(object_based messaging)
         nfs::nfsBool nfsBool_obj;
         char buffer[BUFSIZ];
-	int n = read(sockfd,buffer,BUFSIZ);    // here all client-server communication completes.
+	int n = recv(sockfd,buffer,BUFSIZ,0);    // here all client-server communication completes.
 	if (n < 0) 
 	{
-		fprintf(stderr,"ERROR, while reading data from socket. \n");
+		//fprintf(stderr,"ERROR, while reading data from socket. \n");
 	}
 
 	nfsBool_obj.ParseFromString(buffer);	 	
 	if (nfsBool_obj.result() < 0)
 	{
-		fprintf(stderr,"ERROR, nfs_rmdir response from server. %d \n", nfsBool_obj.result());
+		//fprintf(stderr,"ERROR, nfs_rmdir response from server. %d \n", nfsBool_obj.result());
 		close(sockfd);
 		return nfsBool_obj.result();
 	}
 
-	fprintf(stderr," \n\t ******** ending nfs_rmdir ******* \n");
+	//fprintf(stderr," \n\t ******** ending nfs_rmdir ******* \n");
 	close(sockfd);
 	return nfsBool_obj.result();
 }
 
 static int nfs_symlink(const char *from, const char *to) //8
 {
-	fprintf(stderr," \n ******** nfs_symlink ******* \n");
+	//fprintf(stderr," \n ******** nfs_symlink ******* \n");
 	int res;
 	
 	// cliend filling all relevant information using object_based_message;	
@@ -555,7 +555,7 @@ static int nfs_symlink(const char *from, const char *to) //8
 
 	string test;
 	nfs_obj.SerializeToString(&test);
-    res = write(sockfd,test.c_str(),test.length()); 
+    res = send(sockfd,test.c_str(),test.length(),0); 
     if (res < 0) 
     {
     	perror("\n\tError, couldn't write onto socket.\n\n \t exiting nfs-mount-operation.");
@@ -566,28 +566,28 @@ static int nfs_symlink(const char *from, const char *to) //8
 	// client will look for server reply against the sent request. both will use the same message protocol(object_based messaging)
         nfs::nfsBool nfsBool_obj;
         char buffer[BUFSIZ];
-	int n = read(sockfd,buffer,BUFSIZ);    // here all client-server communication completes.
+	int n = recv(sockfd,buffer,BUFSIZ,0);    // here all client-server communication completes.
 	if (n < 0) 
 	{
-		fprintf(stderr,"ERROR, while reading data from socket. \n");
+		//fprintf(stderr,"ERROR, while reading data from socket. \n");
 	}
 
 	nfsBool_obj.ParseFromString(buffer);	 	
 	if (nfsBool_obj.result() < 0)
 	{
-		fprintf(stderr,"ERROR, nfs_symlink response from server. %d \n", nfsBool_obj.result());
+		//fprintf(stderr,"ERROR, nfs_symlink response from server. %d \n", nfsBool_obj.result());
 		close(sockfd);
 		return nfsBool_obj.result();
 	}
 
-	fprintf(stderr," \n\t ******** ending nfs_symlink ******* \n");
+	//fprintf(stderr," \n\t ******** ending nfs_symlink ******* \n");
 	close(sockfd);
 	return nfsBool_obj.result();
 }
 
 static int nfs_rename(const char *from, const char *to, unsigned int flags)
 {
-	fprintf(stderr," \n ******** nfs_rename ******* from :: %s , to ::: %s \n",from,to);
+	//fprintf(stderr," \n ******** nfs_rename ******* from :: %s , to ::: %s \n",from,to);
 	int res;
 
 	// cliend filling all relevant information using object_based_message;	
@@ -608,7 +608,7 @@ static int nfs_rename(const char *from, const char *to, unsigned int flags)
 
 	string test;
 	nfs_obj.SerializeToString(&test);
-    res = write(sockfd,test.c_str(),test.length()); 
+    res = send(sockfd,test.c_str(),test.length(),0); 
     if (res < 0) 
     {
     	perror("\n\tError, couldn't write onto socket.\n\n \t exiting nfs-mount-operation.");
@@ -619,28 +619,28 @@ static int nfs_rename(const char *from, const char *to, unsigned int flags)
 	// client will look for server reply against the sent request. both will use the same message protocol(object_based messaging)
         nfs::nfsBool nfsBool_obj;
         char buffer[BUFSIZ];
-	int n = read(sockfd,buffer,BUFSIZ);    // here all client-server communication completes.
+	int n = recv(sockfd,buffer,BUFSIZ,0);    // here all client-server communication completes.
 	if (n < 0) 
 	{
-		fprintf(stderr,"ERROR, while reading data from socket. \n");
+		//fprintf(stderr,"ERROR, while reading data from socket. \n");
 	}
 
 	nfsBool_obj.ParseFromString(buffer);	 	
 	if (nfsBool_obj.result() < 0)
 	{
-		fprintf(stderr,"ERROR, nfs_rename response from server. %d \n", nfsBool_obj.result());
+		//fprintf(stderr,"ERROR, nfs_rename response from server. %d \n", nfsBool_obj.result());
 		close(sockfd);
 		return nfsBool_obj.result();
 	}
 
-	fprintf(stderr," \n\t ******** ending nfs_rename ******* \n");
+	//fprintf(stderr," \n\t ******** ending nfs_rename ******* \n");
 	close(sockfd);
 	return nfsBool_obj.result();
 }
 
 static int nfs_link(const char *from, const char *to)
 {
-	fprintf(stderr," \n ******** nfs_link ******* \n");
+	//fprintf(stderr," \n ******** nfs_link ******* \n");
 	int res;
 
 	// cliend filling all relevant information using object_based_message;	
@@ -661,7 +661,7 @@ static int nfs_link(const char *from, const char *to)
 
 	string test;
 	nfs_obj.SerializeToString(&test);
-    res = write(sockfd,test.c_str(),test.length()); 
+    res = send(sockfd,test.c_str(),test.length(),0); 
     if (res < 0) 
     {
     	perror("\n\tError, couldn't write onto socket.\n\n \t exiting nfs-mount-operation.");
@@ -672,28 +672,28 @@ static int nfs_link(const char *from, const char *to)
 	// client will look for server reply against the sent request. both will use the same message protocol(object_based messaging)
         nfs::nfsBool nfsBool_obj;
         char buffer[BUFSIZ];
-	int n = read(sockfd,buffer,BUFSIZ);    // here all client-server communication completes.
+	int n = recv(sockfd,buffer,BUFSIZ,0);    // here all client-server communication completes.
 	if (n < 0) 
 	{
-		fprintf(stderr,"ERROR, while reading data from socket. \n");
+		//fprintf(stderr,"ERROR, while reading data from socket. \n");
 	}
 
 	nfsBool_obj.ParseFromString(buffer);	 	
 	if (nfsBool_obj.result() < 0)
 	{
-		fprintf(stderr,"ERROR, nfs_link response from server. %d \n", nfsBool_obj.result());
+		//fprintf(stderr,"ERROR, nfs_link response from server. %d \n", nfsBool_obj.result());
 		close(sockfd);
 		return nfsBool_obj.result();
 	}
 
-	fprintf(stderr," \n\t ******** ending nfs_link ******* \n");
+	//fprintf(stderr," \n\t ******** ending nfs_link ******* \n");
 	close(sockfd);
 	return nfsBool_obj.result();
 }
 
 static int nfs_chmod(const char *path, mode_t mode) //11
 {
-	fprintf(stderr," \n ******** nfs_chmod ******* \n");
+	//fprintf(stderr," \n ******** nfs_chmod ******* \n");
 	int res;
 	
 	// cliend filling all relevant information using object_based_message;	
@@ -712,7 +712,7 @@ static int nfs_chmod(const char *path, mode_t mode) //11
 
 		string test;
 		nfs_obj.SerializeToString(&test);
-        res = write(sockfd,test.c_str(),test.length());  	//res = mkdir(path, mode);  // original_system_call
+        res = send(sockfd,test.c_str(),test.length(),0);  	//res = mkdir(path, mode);  // original_system_call
         if (res < 0) 
         {
         	perror("\n\tError, couldn't write onto socket.\n\n \t exiting nfs-mount-operation.");
@@ -724,28 +724,28 @@ static int nfs_chmod(const char *path, mode_t mode) //11
 
         nfs::nfsBool nfsBool_obj;
         char buffer[BUFSIZ];
-	int n = read(sockfd,buffer,BUFSIZ);    // here all client-server communication completes.
+	int n = recv(sockfd,buffer,BUFSIZ,0);    // here all client-server communication completes.
 	if (n < 0) 
 	{
-		fprintf(stderr,"ERROR, while reading data from socket. \n");
+		//fprintf(stderr,"ERROR, while reading data from socket. \n");
 	}
 
 	nfsBool_obj.ParseFromString(buffer);	 	
 	if (nfsBool_obj.result() < 0)
 	{
-		fprintf(stderr,"ERROR, nfs_chmod response from server. %d \n", nfsBool_obj.result());
+		//fprintf(stderr,"ERROR, nfs_chmod response from server. %d \n", nfsBool_obj.result());
 		close(sockfd);
 		return nfsBool_obj.result();
 	}
 
-	fprintf(stderr," \n\t ******** ending nfs_chmod ******* \n");
+	//fprintf(stderr," \n\t ******** ending nfs_chmod ******* \n");
 	close(sockfd);
 	return nfsBool_obj.result();
 }
 
 static int nfs_chown(const char *path, uid_t uid, gid_t gid)
 {
-	fprintf(stderr," \n ******** nfs_chown ******* \n");
+	//fprintf(stderr," \n ******** nfs_chown ******* \n");
 	int res;
 	
 	// cliend filling all relevant information using object_based_message;	
@@ -765,7 +765,7 @@ static int nfs_chown(const char *path, uid_t uid, gid_t gid)
 
 		string test;
 		nfs_obj.SerializeToString(&test);
-        res = write(sockfd,test.c_str(),test.length());  	//res = mkdir(path, mode);  // original_system_call
+        res = send(sockfd,test.c_str(),test.length(),0);  	//res = mkdir(path, mode);  // original_system_call
         if (res < 0) 
         {
         	perror("\n\tError, couldn't write onto socket.\n\n \t exiting nfs-mount-operation.");
@@ -777,28 +777,28 @@ static int nfs_chown(const char *path, uid_t uid, gid_t gid)
 
         nfs::nfsBool nfsBool_obj;
         char buffer[BUFSIZ];
-	int n = read(sockfd,buffer,BUFSIZ);    // here all client-server communication completes.
+	int n = recv(sockfd,buffer,BUFSIZ,0);    // here all client-server communication completes.
 	if (n < 0) 
 	{
-		fprintf(stderr,"ERROR, while reading data from socket. \n");
+		//fprintf(stderr,"ERROR, while reading data from socket. \n");
 	}
 
 	nfsBool_obj.ParseFromString(buffer);	 	
 	if (nfsBool_obj.result() < 0)
 	{
-		fprintf(stderr,"ERROR, nfs_chown response from server. %d \n", nfsBool_obj.result());
+		//fprintf(stderr,"ERROR, nfs_chown response from server. %d \n", nfsBool_obj.result());
 		close(sockfd);
 		return nfsBool_obj.result();
 	}
 
-	fprintf(stderr," \n\t ******** ending nfs_chown ******* \n");
+	//fprintf(stderr," \n\t ******** ending nfs_chown ******* \n");
 	close(sockfd);
 	return nfsBool_obj.result();
 }
 
 static int nfs_truncate(const char *path, off_t size)
 {
-	fprintf(stderr," \n ******** nfs_truncate ******* \n");
+	//fprintf(stderr," \n ******** nfs_truncate ******* \n");
 	int res;
 	
 	// cliend filling all relevant information using object_based_message;	
@@ -818,7 +818,7 @@ static int nfs_truncate(const char *path, off_t size)
 
 		string test;
 		nfs_obj.SerializeToString(&test);
-        res = write(sockfd,test.c_str(),test.length());  	//res = mkdir(path, mode);  // original_system_call
+        res = send(sockfd,test.c_str(),test.length(),0);  	//res = mkdir(path, mode);  // original_system_call
         if (res < 0) 
         {
         	perror("\n\tError, couldn't write onto socket.\n\n \t exiting nfs-mount-operation.");
@@ -828,21 +828,21 @@ static int nfs_truncate(const char *path, off_t size)
 	// client will look for server reply against the sent request. both will use the same message protocol(object_based messaging)
         nfs::nfsBool nfsBool_obj;
         char buffer[BUFSIZ];
-	int n = read(sockfd,buffer,BUFSIZ);    // here all client-server communication completes.
+	int n = recv(sockfd,buffer,BUFSIZ,0);    // here all client-server communication completes.
 	if (n < 0) 
 	{
-		fprintf(stderr,"ERROR, while reading data from socket. \n");
+		//fprintf(stderr,"ERROR, while reading data from socket. \n");
 	}
 
 	nfsBool_obj.ParseFromString(buffer);	 	
 	if (nfsBool_obj.result() < 0)
 	{
-		fprintf(stderr,"ERROR, nfs_chown response from server. %d \n", nfsBool_obj.result());
+		//fprintf(stderr,"ERROR, nfs_chown response from server. %d \n", nfsBool_obj.result());
 		close(sockfd);
 		return nfsBool_obj.result();
 	}
 
-	fprintf(stderr," \n\t ******** ending nfs_chown ******* \n");
+	//fprintf(stderr," \n\t ******** ending nfs_chown ******* \n");
 	close(sockfd);
 	return nfsBool_obj.result();
 }
@@ -850,7 +850,7 @@ static int nfs_truncate(const char *path, off_t size)
 #ifdef HAVE_UTIMENSAT
 static int nfs_utimens(const char *path, const struct timespec ts[2]) //14
 {
-	fprintf(stderr," \n ******** nfs_utimens ******* \n");
+	//fprintf(stderr," \n ******** nfs_utimens ******* \n");
 	int res;
 	
 
@@ -869,7 +869,7 @@ static int nfs_utimens(const char *path, const struct timespec ts[2]) //14
 
 static int nfs_open(const char *path, struct fuse_file_info *fi)
 {
-	fprintf(stderr," \n ******** nfs_open ******* \n");
+	//fprintf(stderr," \n ******** nfs_open ******* \n");
 	int res;
 	
 	// cliend filling all relevant information using object_based_message;	
@@ -878,7 +878,7 @@ static int nfs_open(const char *path, struct fuse_file_info *fi)
 			perror("\n\tError, couldn't establish connection with server.");
 			exit(0);
 		}
-		fprintf(stderr," ::: fi->flags %d\n",  fi->flags);
+		//fprintf(stderr," ::: fi->flags %d\n",  fi->flags);
 		nfs::nfsObject nfs_obj; 
 		nfs_obj.set_methd_identfier(15);	
 
@@ -888,7 +888,7 @@ static int nfs_open(const char *path, struct fuse_file_info *fi)
 
 		string test;
 		nfs_obj.SerializeToString(&test);
-        res = write(sockfd,test.c_str(),test.length());  	  // original_system_call
+        res = send(sockfd,test.c_str(),test.length(),0);  	  // original_system_call
         if (res < 0) 
         {
         	perror("\n\tError, couldn't write onto socket.\n\n \t exiting nfs-mount-operation.");
@@ -900,22 +900,22 @@ static int nfs_open(const char *path, struct fuse_file_info *fi)
 
         nfs::nfsBool nfsBool_obj;
         char buffer[BUFSIZ];
-	int n = read(sockfd,buffer,BUFSIZ);    // here all client-server communication completes.
+	int n = recv(sockfd,buffer,BUFSIZ,0);    // here all client-server communication completes.
 	if (n < 0) 
 	{
-		fprintf(stderr,"ERROR, while reading data from socket. \n");
+		//fprintf(stderr,"ERROR, while reading data from socket. \n");
 	}
 
 	nfsBool_obj.ParseFromString(buffer);	 	
 	if (nfsBool_obj.result() < 0)
 	{
-		fprintf(stderr,"ERROR, nfs_open response from server. %d \n", nfsBool_obj.result());
+		//fprintf(stderr,"ERROR, nfs_open response from server. %d \n", nfsBool_obj.result());
 		close(sockfd);
 		return nfsBool_obj.result();
 	}
 
 	fi->flags = nfsBool_obj.fi_open_flags(); 
-	fprintf(stderr," \n\t ******** ending nfs_open ******* \n");
+	//fprintf(stderr," \n\t ******** ending nfs_open ******* \n");
 	close(sockfd);
 
 	return 0;
@@ -924,7 +924,7 @@ static int nfs_open(const char *path, struct fuse_file_info *fi)
 static int nfs_read(const char *path, char *buf, size_t size, off_t offset,
 	struct fuse_file_info *fi)
 {
-	fprintf(stderr," \n ******** nfs_read ******* \n");
+	//fprintf(stderr," \n ******** nfs_read ******* \n");
 	(void) fi;
 	// cliend filling all relevant information using object_based_message;	
 		if(build_connection() < 0)
@@ -943,7 +943,7 @@ static int nfs_read(const char *path, char *buf, size_t size, off_t offset,
 
 		string test;
 		nfs_obj.SerializeToString(&test);
-        int res = write(sockfd,test.c_str(),test.length());  	  // original_system_call
+        int res = send(sockfd,test.c_str(),test.length(),0);  	  // original_system_call
         if (res < 0) 
         {
         	perror("\n\tError, couldn't write onto socket.\n\n \t exiting nfs-mount-operation.");
@@ -953,28 +953,32 @@ static int nfs_read(const char *path, char *buf, size_t size, off_t offset,
 	// client will look for server reply against the sent request. both will use the same message protocol(object_based messaging)
         nfs::nfsBool nfsBool_obj;
         char buffer[BUFSIZ];
-		int n = read(sockfd,buffer,BUFSIZ);    // here all client-server communication completes.
+		int n = recv(sockfd,buffer,BUFSIZ,0);    // here all client-server communication completes.
 		if (n < 0) 
 		{
-			fprintf(stderr,"ERROR, while reading data from socket. \n");
+			//fprintf(stderr,"ERROR, while reading data from socket. \n");
 		}
 
 		nfsBool_obj.ParseFromString(buffer);
 		//string buftest = nfsBool_obj.buffer_space().c_str();
-		memcpy(buf,nfsBool_obj.buffer_space().c_str(),nfsBool_obj.buffer_space().length());	 	
+		
 
 		if (nfsBool_obj.result() < 0)
 		{
-			fprintf(stderr,"ERROR, nfs_read response from server. %d \n", nfsBool_obj.result());
+			//fprintf(stderr,"ERROR, nfs_read response from server. %d \n", nfsBool_obj.result());
 			close(sockfd);
 			return nfsBool_obj.result();
 		}
 
-		fprintf(stderr,"\n\tvalue from server buf %s\n",nfsBool_obj.buffer_space().c_str());
-		fprintf(stderr,"\n\tvalue of buf %s\n",buf);
+		if(nfsBool_obj.buffer_space().length() > 0)
+		{
+			memcpy(buf,nfsBool_obj.buffer_space().c_str(),nfsBool_obj.buffer_space().length());	 	
+		}
+		else
+		{
+			//fprintf(stderr,"ERROR, memory copy error string please check \n");	
+		}
 
-
-		fprintf(stderr," \n\t ******** ending nfs_read ******* \n");
 		close(sockfd);
 		return nfsBool_obj.result();
 }
@@ -982,7 +986,7 @@ static int nfs_read(const char *path, char *buf, size_t size, off_t offset,
 static int nfs_write(const char *path, const char *buf, size_t size,
 	off_t offset, struct fuse_file_info *fi)
 {
-	fprintf(stderr," \n ******** nfs_write ******* \n");	
+	//fprintf(stderr," \n ******** nfs_write ******* \n");	
 	int res;
 	
 	// cliend filling all relevant information using object_based_message;	
@@ -997,13 +1001,14 @@ static int nfs_write(const char *path, const char *buf, size_t size,
 
 		string nfs_path = path;
 		nfs_obj.set_item_name(nfs_path);
-		nfs_obj.set_name_from(string(buf, size));
+		string nfs_buffer = buf;
+		nfs_obj.set_buffer(buf);
 		nfs_obj.set_st_size(size);
 		nfs_obj.set_off_set(offset);
 
 		string test;
 		nfs_obj.SerializeToString(&test);
-        res = write(sockfd,test.c_str(),test.length());  	  // original_system_call
+        res = send(sockfd,test.c_str(),test.length(),0);  	  // original_system_call
         if (res < 0) 
         {
         	perror("\n\tError, couldn't write onto socket.\n\n \t exiting nfs-mount-operation.");
@@ -1013,25 +1018,21 @@ static int nfs_write(const char *path, const char *buf, size_t size,
         // client will look for server reply against the sent request. both will use the same message protocol(object_based messaging)
         nfs::nfsBool nfsBool_obj;
         char buffer[BUFSIZ];
-		int n = read(sockfd,buffer,BUFSIZ);    // here all client-server communication completes.
+		int n = recv(sockfd,buffer,BUFSIZ,0);    // here all client-server communication completes.
 		if (n < 0) 
 		{
-			fprintf(stderr,"ERROR, while reading data from socket. \n");
+			//fprintf(stderr,"ERROR, while reading data from socket. \n");
 		}
 
 		nfsBool_obj.ParseFromString(buffer);
 		if (nfsBool_obj.result() < 0)
 		{
-			fprintf(stderr,"ERROR, nfs_write response from server. %d \n", nfsBool_obj.result());
+			//fprintf(stderr,"ERROR, nfs_write response from server. %d \n", nfsBool_obj.result());
 			close(sockfd);
 			return nfsBool_obj.result();
 		}
 
-		fprintf(stderr,"\n\tvalue from server buf %s\n",nfsBool_obj.buffer_space().c_str());
-		fprintf(stderr,"\n\tvalue of buf %s\n",buf);
-
-
-		fprintf(stderr," \n\t ******** ending nfs_write ******* \n");
+		//fprintf(stderr," \n\t ******** ending nfs_write ******* %d \n", nfsBool_obj.result());
 		close(sockfd);
 		return nfsBool_obj.result();
 }
@@ -1039,7 +1040,7 @@ static int nfs_write(const char *path, const char *buf, size_t size,
 static int nfs_statfs(const char *path, struct statvfs *stbuf)
 {
 
- 	fprintf(stderr," \n ******** nfs_statfs %s ******* \n", path);
+ 	//fprintf(stderr," \n ******** nfs_statfs %s ******* \n", path);
     int res ;
 	if(build_connection() < 0) // reneweing socket connection
 	{
@@ -1056,7 +1057,7 @@ static int nfs_statfs(const char *path, struct statvfs *stbuf)
 
 	string test;
 	nfs_obj.SerializeToString(&test);
-        res = write(sockfd,test.c_str(),test.length()); 	// res = lstat(path, stbuf); original_system_call
+        res = send(sockfd,test.c_str(),test.length(),0); 	// res = lstat(path, stbuf); original_system_call
         if(res < 0)
         {
         	perror("\n\tError, couldn't write onto socket.\n\n \t exiting nfs-mount-operation.");
@@ -1066,17 +1067,17 @@ static int nfs_statfs(const char *path, struct statvfs *stbuf)
 
         nfs::nfsVFSStat nfsVFS_obj;
         char buffer[BUFSIZ];
-        res = read(sockfd,buffer,BUFSIZ);
+        res = recv(sockfd,buffer,BUFSIZ,0);
         if (res < 0) 
         {
-        	fprintf(stderr,"ERROR, while reading data from socket. \n");
+        	//fprintf(stderr,"ERROR, while reading data from socket. \n");
         }
 
 	nfsVFS_obj.ParseFromString(buffer);	// here all client-server communication completes.
 	res = nfsVFS_obj.result();
 	if (nfsVFS_obj.result() < 0) 
 	{
-		fprintf(stderr,"ERROR, nfs_getattr response from server: %d \n", nfsVFS_obj.result());
+		//fprintf(stderr,"ERROR, nfs_getattr response from server: %d \n", nfsVFS_obj.result());
 		close(sockfd);
 		return nfsVFS_obj.result();
 	}
@@ -1093,7 +1094,7 @@ static int nfs_statfs(const char *path, struct statvfs *stbuf)
 	stbuf->f_flag = nfsVFS_obj.f_flag();
 	stbuf->f_namemax = nfsVFS_obj.f_namemax();
 	
-	fprintf(stderr," \n ******** ending nfs_getattr %s ******* \n", path); 
+	//fprintf(stderr," \n ******** ending nfs_getattr %s ******* \n", path); 
 	close(sockfd);
 	return 0;
 
@@ -1104,7 +1105,7 @@ static int nfs_release(const char *path, struct fuse_file_info *fi)
 {
 	/* Just a stub.	 This method is optional and can safely be left
 	   unimplemented */
-	fprintf(stderr," \n ******** nfs_release ******* \n");	
+	//fprintf(stderr," \n ******** nfs_release ******* \n");	
 	(void) path;
 	(void) fi;
 	return 0;
@@ -1115,7 +1116,7 @@ static int nfs_fsync(const char *path, int isdatasync,
 {
 	/* Just a stub.	 This method is optional and can safely be left
 	   unimplemented */
-	fprintf(stderr," \n ******** nfs_fsync ******* \n");	
+	//fprintf(stderr," \n ******** nfs_fsync ******* \n");	
 	(void) path;
 	(void) isdatasync;
 	(void) fi;
@@ -1126,7 +1127,7 @@ static int nfs_fsync(const char *path, int isdatasync,
 static int nfs_fallocate(const char *path, int mode,
 	off_t offset, off_t length, struct fuse_file_info *fi)
 {
-	fprintf(stderr," \n ******** nfs_fallocate ******* \n");	
+	//fprintf(stderr," \n ******** nfs_fallocate ******* \n");	
 	int fd;
 	int res;
 
@@ -1151,7 +1152,7 @@ static int nfs_fallocate(const char *path, int mode,
 static int nfs_setxattr(const char *path, const char *name, const char *value,
 	size_t size, int flags) 0 
 {
-	fprintf(stderr," \n ******** nfs_setxattr ******* \n");	
+	//fprintf(stderr," \n ******** nfs_setxattr ******* \n");	
 	int res = lsetxattr(path, name, value, size, flags);
 	if (res == -1)
 		return -errno;
@@ -1161,7 +1162,7 @@ static int nfs_setxattr(const char *path, const char *name, const char *value,
 static int nfs_getxattr(const char *path, const char *name, char *value,
 	size_t size)
 {
-	fprintf(stderr," \n ******** nfs_getxattr ******* \n");	
+	//fprintf(stderr," \n ******** nfs_getxattr ******* \n");	
 	int res = lgetxattr(path, name, value, size);
 	if (res == -1)
 		return -errno;
@@ -1170,7 +1171,7 @@ static int nfs_getxattr(const char *path, const char *name, char *value,
 
 static int nfs_listxattr(const char *path, char *list, size_t size)
 {
-	fprintf(stderr," \n ******** nfs_listxattr ******* \n");	
+	//fprintf(stderr," \n ******** nfs_listxattr ******* \n");	
 	int res = llistxattr(path, list, size);
 	if (res == -1)
 		return -errno;
@@ -1179,7 +1180,7 @@ static int nfs_listxattr(const char *path, char *list, size_t size)
 
 static int nfs_removexattr(const char *path, const char *name)
 {
-	fprintf(stderr," \n ******** nfs_removexattr ******* \n");
+	//fprintf(stderr," \n ******** nfs_removexattr ******* \n");
 	int res = lremovexattr(path, name);
 	if (res == -1)
 		return -errno;
@@ -1230,7 +1231,7 @@ void initialise_nfs_operations()
 
 int build_connection()
 {
-        //fprintf(stderr,"\n\t ************** SOCKET INITIALISATION *******  \n");	
+        ////fprintf(stderr,"\n\t ************** SOCKET INITIALISATION *******  \n");	
 	struct hostent *sockServer;
 	struct sockaddr_in servernsock_addr;	
 	int portno = atoi("51717"); /* binding port # */
@@ -1238,15 +1239,15 @@ int build_connection()
 	sockfd = socket(AF_INET, SOCK_STREAM, 0); /* opening socket */
 	if (sockfd < 0) 
 	{
-		fprintf(stderr,"\n\t************** SOCKET OPENING ERROR *******  \n");
+		//fprintf(stderr,"\n\t************** SOCKET OPENING ERROR *******  \n");
 		return -1;
 	}
 
 	sockServer = gethostbyname("localhost");
 	if (sockServer == NULL) 
 	{
-		fprintf(stderr,"ERROR, no such host found.\n \tnfs mount operation failed.");
-		fprintf(stderr,"ERROR, exiting system.\n");
+		//fprintf(stderr,"ERROR, no such host found.\n \tnfs mount operation failed.");
+		//fprintf(stderr,"ERROR, exiting system.\n");
 		return -1;
 	}
 
@@ -1260,7 +1261,7 @@ int build_connection()
 	if (connect(sockfd,(struct sockaddr *) 
 		&servernsock_addr, sizeof(servernsock_addr)) < 0) 
 	{
-		fprintf(stderr,"ERROR, could not connect server.\n");
+		//fprintf(stderr,"ERROR, could not connect server.\n");
 		return -1;
 	}
 	return 0;
@@ -1274,10 +1275,10 @@ int push_to_server(string hi)
 	string test;
 	nfs_obj.SerializeToString(&test);
 
-	int n = write(sockfd,test.c_str(),test.length());
+	int n = send(sockfd,test.c_str(),test.length(),0);
 	if (n < 0) 
 	{
-		fprintf(stderr,"\n\tERROR, while writing data to socket.\n");
+		//fprintf(stderr,"\n\tERROR, while writing data to socket.\n");
 		return -1;
 	}
 	return 0;
@@ -1289,9 +1290,9 @@ void pull_from_server(char* message)
 	int n = read(sockfd,message,strlen(message));
 	if (n < 0) 
 	{
-		fprintf(stderr,"\n\tERROR, while reading data from socket\n");
+		//fprintf(stderr,"\n\tERROR, while reading data from socket\n");
 	}
-	fprintf(stderr,"\n\t**Server-Response:  %s \n", message);
+	//fprintf(stderr,"\n\t**Server-Response:  %s \n", message);
 }
 
 /* close(sockfd); need to close socket after every operation */
@@ -1300,7 +1301,7 @@ void pull_from_server(char* message)
 
 int main(int argc, char *argv[])
 {
-	fprintf(stderr," \n\t*** started mounting directory with nfs ***\n\n");
+	//fprintf(stderr," \n\t*** started mounting directory with nfs ***\n\n");
 	umask(0);    	
 
 	if(build_connection() < 0)

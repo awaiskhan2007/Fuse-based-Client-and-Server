@@ -16,6 +16,7 @@
       string name_to = 9;
       int64 st_size = 10;    
       int64  off_set = 11 ;
+      bytes buffer = 12;
     }
 
     message nfsStat
@@ -46,13 +47,13 @@
       int64 f_frsize = 2;    
       int64 f_blocks = 3;    
       int64 f_bfree  = 4;   
-      int64     f_bavail = 5;   
-      int64     f_files  = 6;   
-      int64     f_ffree  = 7;   
-      int64     f_favail =8 ;   
-      int64     f_fsid  = 9;     
-      int64     f_flag  = 10;    
-      int64     f_namemax  = 11; 
+      int64 f_bavail = 5;   
+      int64 f_files  = 6;   
+      int64 f_ffree  = 7;   
+      int64 f_favail =8 ;   
+      int64 f_fsid  = 9;     
+      int64 f_flag  = 10;    
+      int64 f_namemax  = 11; 
       int32 result = 12; 
     }
 

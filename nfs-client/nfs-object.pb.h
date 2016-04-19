@@ -191,6 +191,17 @@ class nfsObject : public ::google::protobuf::Message {
   ::google::protobuf::int64 off_set() const;
   void set_off_set(::google::protobuf::int64 value);
 
+  // optional bytes buffer = 12;
+  void clear_buffer();
+  static const int kBufferFieldNumber = 12;
+  const ::std::string& buffer() const;
+  void set_buffer(const ::std::string& value);
+  void set_buffer(const char* value);
+  void set_buffer(const void* value, size_t size);
+  ::std::string* mutable_buffer();
+  ::std::string* release_buffer();
+  void set_allocated_buffer(::std::string* buffer);
+
   // @@protoc_insertion_point(class_scope:nfs.nfsObject)
  private:
 
@@ -207,6 +218,7 @@ class nfsObject : public ::google::protobuf::Message {
   ::google::protobuf::internal::ArenaStringPtr name_to_;
   ::google::protobuf::int64 st_size_;
   ::google::protobuf::int64 off_set_;
+  ::google::protobuf::internal::ArenaStringPtr buffer_;
   mutable int _cached_size_;
   friend void  protobuf_AddDesc_nfs_2dobject_2eproto();
   friend void protobuf_AssignDesc_nfs_2dobject_2eproto();
@@ -1172,6 +1184,49 @@ inline void nfsObject::set_off_set(::google::protobuf::int64 value) {
   
   off_set_ = value;
   // @@protoc_insertion_point(field_set:nfs.nfsObject.off_set)
+}
+
+// optional bytes buffer = 12;
+inline void nfsObject::clear_buffer() {
+  buffer_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& nfsObject::buffer() const {
+  // @@protoc_insertion_point(field_get:nfs.nfsObject.buffer)
+  return buffer_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void nfsObject::set_buffer(const ::std::string& value) {
+  
+  buffer_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:nfs.nfsObject.buffer)
+}
+inline void nfsObject::set_buffer(const char* value) {
+  
+  buffer_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:nfs.nfsObject.buffer)
+}
+inline void nfsObject::set_buffer(const void* value, size_t size) {
+  
+  buffer_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:nfs.nfsObject.buffer)
+}
+inline ::std::string* nfsObject::mutable_buffer() {
+  
+  // @@protoc_insertion_point(field_mutable:nfs.nfsObject.buffer)
+  return buffer_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* nfsObject::release_buffer() {
+  
+  return buffer_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void nfsObject::set_allocated_buffer(::std::string* buffer) {
+  if (buffer != NULL) {
+    
+  } else {
+    
+  }
+  buffer_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), buffer);
+  // @@protoc_insertion_point(field_set_allocated:nfs.nfsObject.buffer)
 }
 
 // -------------------------------------------------------------------

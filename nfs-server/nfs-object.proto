@@ -16,6 +16,7 @@
       string name_to = 9;
       int64 st_size = 10;    
       int64  off_set = 11 ;
+      bytes buffer = 12;
     }
 
     message nfsStat

@@ -47,7 +47,7 @@ void protobuf_AssignDesc_nfs_2dobject_2eproto() {
       "nfs-object.proto");
   GOOGLE_CHECK(file != NULL);
   nfsObject_descriptor_ = file->message_type(0);
-  static const int nfsObject_offsets_[11] = {
+  static const int nfsObject_offsets_[12] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(nfsObject, methd_identfier_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(nfsObject, sys_call_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(nfsObject, item_name_),
@@ -59,6 +59,7 @@ void protobuf_AssignDesc_nfs_2dobject_2eproto() {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(nfsObject, name_to_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(nfsObject, st_size_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(nfsObject, off_set_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(nfsObject, buffer_),
   };
   nfsObject_reflection_ =
     ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
@@ -218,35 +219,35 @@ void protobuf_AddDesc_nfs_2dobject_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\020nfs-object.proto\022\003nfs\"\332\001\n\tnfsObject\022\027\n"
+    "\n\020nfs-object.proto\022\003nfs\"\352\001\n\tnfsObject\022\027\n"
     "\017methd_identfier\030\001 \001(\005\022\020\n\010sys_call\030\002 \001(\005"
     "\022\021\n\titem_name\030\003 \001(\t\022\021\n\titem_path\030\004 \001(\t\022\025"
     "\n\ritem_sys_call\030\005 \001(\t\022\016\n\006mode_t\030\006 \001(\003\022\017\n"
     "\007st_rdev\030\007 \001(\003\022\021\n\tname_from\030\010 \001(\t\022\017\n\007nam"
     "e_to\030\t \001(\t\022\017\n\007st_size\030\n \001(\003\022\017\n\007off_set\030\013"
-    " \001(\003\"\265\002\n\007nfsStat\022\016\n\006st_dev\030\001 \001(\003\022\016\n\006st_i"
-    "no\030\002 \001(\003\022\017\n\007st_mode\030\003 \001(\003\022\020\n\010st_nlink\030\004 "
-    "\001(\003\022\016\n\006st_uid\030\005 \001(\003\022\016\n\006st_gid\030\006 \001(\003\022\017\n\007s"
-    "t_rdev\030\007 \001(\003\022\017\n\007st_size\030\010 \001(\003\022\022\n\nst_blks"
-    "ize\030\t \001(\003\022\021\n\tst_blocks\030\n \001(\003\022\r\n\005mtime\030\013 "
-    "\001(\003\022\r\n\005ctime\030\014 \001(\003\022\r\n\005atime\030\r \001(\003\022\027\n\017met"
-    "hd_identfier\030\016 \001(\005\022\021\n\titem_name\030\017 \001(\t\022\024\n"
-    "\014buffer_space\030\020 \001(\t\022\017\n\007off_set\030\021 \001(\003\"\333\001\n"
-    "\nnfsVFSStat\022\017\n\007f_bsize\030\001 \001(\003\022\020\n\010f_frsize"
-    "\030\002 \001(\003\022\020\n\010f_blocks\030\003 \001(\003\022\017\n\007f_bfree\030\004 \001("
-    "\003\022\020\n\010f_bavail\030\005 \001(\003\022\017\n\007f_files\030\006 \001(\003\022\017\n\007"
-    "f_ffree\030\007 \001(\003\022\020\n\010f_favail\030\010 \001(\003\022\016\n\006f_fsi"
-    "d\030\t \001(\003\022\016\n\006f_flag\030\n \001(\003\022\021\n\tf_namemax\030\013 \001"
-    "(\003\022\016\n\006result\030\014 \001(\005\"\231\002\n\007nfsBool\022\016\n\006result"
-    "\030\001 \001(\005\022\036\n\010nfs_stat\030\002 \001(\0132\014.nfs.nfsStat\022\017"
-    "\n\007fi_name\030\003 \001(\t\022\022\n\nfi_dirname\030\004 \001(\t\022\023\n\013f"
-    "i_pathname\030\005 \001(\t\022\021\n\tfi_offset\030\006 \001(\003\022\r\n\005f"
-    "i_fs\030\007 \001(\t\022\020\n\010fi_mount\030\010 \001(\t\022\025\n\rfi_open_"
-    "flags\030\t \001(\003\022\016\n\006mode_t\030\n \001(\003\022\017\n\007st_rdev\030\013"
-    " \001(\003\022\024\n\014buffer_space\030\014 \001(\t\022\021\n\tst_offset\030"
-    "\r \001(\003\022\017\n\007st_size\030\016 \001(\003\":\n\nnfsDirList\022\026\n\016"
-    "nfs_dir_result\030\001 \001(\005\022\024\n\014nfs_dir_list\030\002 \003"
-    "(\tb\006proto3", 1130);
+    " \001(\003\022\016\n\006buffer\030\014 \001(\014\"\265\002\n\007nfsStat\022\016\n\006st_d"
+    "ev\030\001 \001(\003\022\016\n\006st_ino\030\002 \001(\003\022\017\n\007st_mode\030\003 \001("
+    "\003\022\020\n\010st_nlink\030\004 \001(\003\022\016\n\006st_uid\030\005 \001(\003\022\016\n\006s"
+    "t_gid\030\006 \001(\003\022\017\n\007st_rdev\030\007 \001(\003\022\017\n\007st_size\030"
+    "\010 \001(\003\022\022\n\nst_blksize\030\t \001(\003\022\021\n\tst_blocks\030\n"
+    " \001(\003\022\r\n\005mtime\030\013 \001(\003\022\r\n\005ctime\030\014 \001(\003\022\r\n\005at"
+    "ime\030\r \001(\003\022\027\n\017methd_identfier\030\016 \001(\005\022\021\n\tit"
+    "em_name\030\017 \001(\t\022\024\n\014buffer_space\030\020 \001(\t\022\017\n\007o"
+    "ff_set\030\021 \001(\003\"\333\001\n\nnfsVFSStat\022\017\n\007f_bsize\030\001"
+    " \001(\003\022\020\n\010f_frsize\030\002 \001(\003\022\020\n\010f_blocks\030\003 \001(\003"
+    "\022\017\n\007f_bfree\030\004 \001(\003\022\020\n\010f_bavail\030\005 \001(\003\022\017\n\007f"
+    "_files\030\006 \001(\003\022\017\n\007f_ffree\030\007 \001(\003\022\020\n\010f_favai"
+    "l\030\010 \001(\003\022\016\n\006f_fsid\030\t \001(\003\022\016\n\006f_flag\030\n \001(\003\022"
+    "\021\n\tf_namemax\030\013 \001(\003\022\016\n\006result\030\014 \001(\005\"\231\002\n\007n"
+    "fsBool\022\016\n\006result\030\001 \001(\005\022\036\n\010nfs_stat\030\002 \001(\013"
+    "2\014.nfs.nfsStat\022\017\n\007fi_name\030\003 \001(\t\022\022\n\nfi_di"
+    "rname\030\004 \001(\t\022\023\n\013fi_pathname\030\005 \001(\t\022\021\n\tfi_o"
+    "ffset\030\006 \001(\003\022\r\n\005fi_fs\030\007 \001(\t\022\020\n\010fi_mount\030\010"
+    " \001(\t\022\025\n\rfi_open_flags\030\t \001(\003\022\016\n\006mode_t\030\n "
+    "\001(\003\022\017\n\007st_rdev\030\013 \001(\003\022\024\n\014buffer_space\030\014 \001"
+    "(\t\022\021\n\tst_offset\030\r \001(\003\022\017\n\007st_size\030\016 \001(\003\":"
+    "\n\nnfsDirList\022\026\n\016nfs_dir_result\030\001 \001(\005\022\024\n\014"
+    "nfs_dir_list\030\002 \003(\tb\006proto3", 1146);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "nfs-object.proto", &protobuf_RegisterTypes);
   nfsObject::default_instance_ = new nfsObject();
@@ -293,6 +294,7 @@ const int nfsObject::kNameFromFieldNumber;
 const int nfsObject::kNameToFieldNumber;
 const int nfsObject::kStSizeFieldNumber;
 const int nfsObject::kOffSetFieldNumber;
+const int nfsObject::kBufferFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 nfsObject::nfsObject()
@@ -328,6 +330,7 @@ void nfsObject::SharedCtor() {
   name_to_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   st_size_ = GOOGLE_LONGLONG(0);
   off_set_ = GOOGLE_LONGLONG(0);
+  buffer_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
 nfsObject::~nfsObject() {
@@ -341,6 +344,7 @@ void nfsObject::SharedDtor() {
   item_sys_call_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   name_from_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   name_to_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  buffer_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   if (this != default_instance_) {
   }
 }
@@ -387,6 +391,7 @@ void nfsObject::Clear() {
   name_from_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   ZR_(st_size_, off_set_);
   name_to_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  buffer_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 
 #undef ZR_HELPER_
 #undef ZR_
@@ -573,6 +578,19 @@ bool nfsObject::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
+        if (input->ExpectTag(98)) goto parse_buffer;
+        break;
+      }
+
+      // optional bytes buffer = 12;
+      case 12: {
+        if (tag == 98) {
+         parse_buffer:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+                input, this->mutable_buffer()));
+        } else {
+          goto handle_unusual;
+        }
         if (input->ExpectAtEnd()) goto success;
         break;
       }
@@ -681,6 +699,12 @@ void nfsObject::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt64(11, this->off_set(), output);
   }
 
+  // optional bytes buffer = 12;
+  if (this->buffer().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
+      12, this->buffer(), output);
+  }
+
   // @@protoc_insertion_point(serialize_end:nfs.nfsObject)
 }
 
@@ -772,6 +796,13 @@ void nfsObject::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteInt64ToArray(11, this->off_set(), target);
   }
 
+  // optional bytes buffer = 12;
+  if (this->buffer().size() > 0) {
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+        12, this->buffer(), target);
+  }
+
   // @@protoc_insertion_point(serialize_to_array_end:nfs.nfsObject)
   return target;
 }
@@ -856,6 +887,13 @@ int nfsObject::ByteSize() const {
         this->off_set());
   }
 
+  // optional bytes buffer = 12;
+  if (this->buffer().size() > 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::BytesSize(
+        this->buffer());
+  }
+
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = total_size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
@@ -914,6 +952,10 @@ void nfsObject::MergeFrom(const nfsObject& from) {
   if (from.off_set() != 0) {
     set_off_set(from.off_set());
   }
+  if (from.buffer().size() > 0) {
+
+    buffer_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.buffer_);
+  }
 }
 
 void nfsObject::CopyFrom(const ::google::protobuf::Message& from) {
@@ -949,6 +991,7 @@ void nfsObject::InternalSwap(nfsObject* other) {
   name_to_.Swap(&other->name_to_);
   std::swap(st_size_, other->st_size_);
   std::swap(off_set_, other->off_set_);
+  buffer_.Swap(&other->buffer_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   std::swap(_cached_size_, other->_cached_size_);
 }
@@ -1261,6 +1304,49 @@ void nfsObject::clear_off_set() {
   
   off_set_ = value;
   // @@protoc_insertion_point(field_set:nfs.nfsObject.off_set)
+}
+
+// optional bytes buffer = 12;
+void nfsObject::clear_buffer() {
+  buffer_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ const ::std::string& nfsObject::buffer() const {
+  // @@protoc_insertion_point(field_get:nfs.nfsObject.buffer)
+  return buffer_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ void nfsObject::set_buffer(const ::std::string& value) {
+  
+  buffer_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:nfs.nfsObject.buffer)
+}
+ void nfsObject::set_buffer(const char* value) {
+  
+  buffer_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:nfs.nfsObject.buffer)
+}
+ void nfsObject::set_buffer(const void* value, size_t size) {
+  
+  buffer_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:nfs.nfsObject.buffer)
+}
+ ::std::string* nfsObject::mutable_buffer() {
+  
+  // @@protoc_insertion_point(field_mutable:nfs.nfsObject.buffer)
+  return buffer_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ ::std::string* nfsObject::release_buffer() {
+  
+  return buffer_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ void nfsObject::set_allocated_buffer(::std::string* buffer) {
+  if (buffer != NULL) {
+    
+  } else {
+    
+  }
+  buffer_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), buffer);
+  // @@protoc_insertion_point(field_set_allocated:nfs.nfsObject.buffer)
 }
 
 #endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
