@@ -70,7 +70,7 @@
         int64 fi_open_flags = 9;
         int64  mode_t = 10;
         int64  st_rdev = 11;
-        string buffer_space = 12;
+        bytes buffer_space = 12;
         int64  st_offset = 13;
         int64  st_size = 14;
     }

@@ -734,13 +734,13 @@ class nfsBool : public ::google::protobuf::Message {
   ::google::protobuf::int64 st_rdev() const;
   void set_st_rdev(::google::protobuf::int64 value);
 
-  // optional string buffer_space = 12;
+  // optional bytes buffer_space = 12;
   void clear_buffer_space();
   static const int kBufferSpaceFieldNumber = 12;
   const ::std::string& buffer_space() const;
   void set_buffer_space(const ::std::string& value);
   void set_buffer_space(const char* value);
-  void set_buffer_space(const char* value, size_t size);
+  void set_buffer_space(const void* value, size_t size);
   ::std::string* mutable_buffer_space();
   ::std::string* release_buffer_space();
   void set_allocated_buffer_space(::std::string* buffer_space);
@@ -2027,7 +2027,7 @@ inline void nfsBool::set_st_rdev(::google::protobuf::int64 value) {
   // @@protoc_insertion_point(field_set:nfs.nfsBool.st_rdev)
 }
 
-// optional string buffer_space = 12;
+// optional bytes buffer_space = 12;
 inline void nfsBool::clear_buffer_space() {
   buffer_space_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
@@ -2045,7 +2045,7 @@ inline void nfsBool::set_buffer_space(const char* value) {
   buffer_space_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
   // @@protoc_insertion_point(field_set_char:nfs.nfsBool.buffer_space)
 }
-inline void nfsBool::set_buffer_space(const char* value, size_t size) {
+inline void nfsBool::set_buffer_space(const void* value, size_t size) {
   
   buffer_space_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));

@@ -245,7 +245,7 @@ void protobuf_AddDesc_nfs_2dobject_2eproto() {
     "ffset\030\006 \001(\003\022\r\n\005fi_fs\030\007 \001(\t\022\020\n\010fi_mount\030\010"
     " \001(\t\022\025\n\rfi_open_flags\030\t \001(\003\022\016\n\006mode_t\030\n "
     "\001(\003\022\017\n\007st_rdev\030\013 \001(\003\022\024\n\014buffer_space\030\014 \001"
-    "(\t\022\021\n\tst_offset\030\r \001(\003\022\017\n\007st_size\030\016 \001(\003\":"
+    "(\014\022\021\n\tst_offset\030\r \001(\003\022\017\n\007st_size\030\016 \001(\003\":"
     "\n\nnfsDirList\022\026\n\016nfs_dir_result\030\001 \001(\005\022\024\n\014"
     "nfs_dir_list\030\002 \003(\tb\006proto3", 1146);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
@@ -3635,16 +3635,12 @@ bool nfsBool::MergePartialFromCodedStream(
         break;
       }
 
-      // optional string buffer_space = 12;
+      // optional bytes buffer_space = 12;
       case 12: {
         if (tag == 98) {
          parse_buffer_space:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
                 input, this->mutable_buffer_space()));
-          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-            this->buffer_space().data(), this->buffer_space().length(),
-            ::google::protobuf::internal::WireFormatLite::PARSE,
-            "nfs.nfsBool.buffer_space"));
         } else {
           goto handle_unusual;
         }
@@ -3787,13 +3783,9 @@ void nfsBool::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt64(11, this->st_rdev(), output);
   }
 
-  // optional string buffer_space = 12;
+  // optional bytes buffer_space = 12;
   if (this->buffer_space().size() > 0) {
-    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-      this->buffer_space().data(), this->buffer_space().length(),
-      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "nfs.nfsBool.buffer_space");
-    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+    ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
       12, this->buffer_space(), output);
   }
 
@@ -3900,14 +3892,10 @@ void nfsBool::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteInt64ToArray(11, this->st_rdev(), target);
   }
 
-  // optional string buffer_space = 12;
+  // optional bytes buffer_space = 12;
   if (this->buffer_space().size() > 0) {
-    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-      this->buffer_space().data(), this->buffer_space().length(),
-      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "nfs.nfsBool.buffer_space");
     target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
         12, this->buffer_space(), target);
   }
 
@@ -4005,10 +3993,10 @@ int nfsBool::ByteSize() const {
         this->st_rdev());
   }
 
-  // optional string buffer_space = 12;
+  // optional bytes buffer_space = 12;
   if (this->buffer_space().size() > 0) {
     total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::StringSize(
+      ::google::protobuf::internal::WireFormatLite::BytesSize(
         this->buffer_space());
   }
 
@@ -4469,7 +4457,7 @@ void nfsBool::clear_st_rdev() {
   // @@protoc_insertion_point(field_set:nfs.nfsBool.st_rdev)
 }
 
-// optional string buffer_space = 12;
+// optional bytes buffer_space = 12;
 void nfsBool::clear_buffer_space() {
   buffer_space_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
@@ -4487,7 +4475,7 @@ void nfsBool::clear_buffer_space() {
   buffer_space_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
   // @@protoc_insertion_point(field_set_char:nfs.nfsBool.buffer_space)
 }
- void nfsBool::set_buffer_space(const char* value, size_t size) {
+ void nfsBool::set_buffer_space(const void* value, size_t size) {
   
   buffer_space_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
